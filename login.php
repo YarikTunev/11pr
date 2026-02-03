@@ -17,7 +17,7 @@
 	<head> 
 		<meta charset="utf-8">
 		<title> Авторизация </title>
-		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 		<script src="https://code.jquery.com/jquery-1.8.3.js"></script>
 		<link rel="stylesheet" href="style.css">
 	</head>
@@ -57,6 +57,11 @@
 		</div>
 		
 		<script>
+			const SECRET_KEY = "MySuperSecretKey123";
+
+			function encryptData(text) {
+				return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+			}
 			function LogIn() {
 				var loading = document.getElementsByClassName("loading")[0];
 				var button = document.getElementsByClassName("button")[0];
