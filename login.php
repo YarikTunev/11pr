@@ -57,10 +57,20 @@
 		</div>
 		
 		<script>
-			const SECRET_KEY = "MySuperSecretKey123";
+			const secretKey = "qazxswedcvfrtgbn";
 
-			function encryptData(text) {
-				return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+			function encryptAES(data, key) {
+				var keyHash = CryptoJS.MD5(key);
+				var keyBytes = CryptoJS.enc.Hex.parse(keyHash.toString());
+				var iv = CryptoJS.lib.WordArray.random(16);
+				var encrypted = CryptoJS.AES.encrypt(data, keyBytes, {
+					iv: iv,
+					mode: CryptoJS.mode.CBC,
+					padding: CryptoJS.pad.Pkcs7
+				});
+				var combined = iv.concat(encrypted.ciphertext);
+
+				return CryptoJS.enc.Base64.stringify(combined);
 			}
 			function LogIn() {
 				var loading = document.getElementsByClassName("loading")[0];
@@ -70,6 +80,9 @@
 				var _password = document.getElementsByName("_password")[0].value;
 				loading.style.display = "block";
 				button.className = "button_diactive";
+
+				_login = encryptAES(_login, secretKey);
+    			_password = encryptAES(_password, secretKey);
 				
 				var data = new FormData();
 				data.append("login", _login);
